@@ -154,13 +154,66 @@ Main dataset:
 
 ## Visualizations
 
-Visual analysis of the model will be added to the repository, including:
+### Top 15 UFC Events by V2 Event Strength
 
-- Top UFC events by V2 Event Strength
-- V1 vs. V2 rankings
-- Ranking Depth vs. Event Strength
-- V2 component weights
-- Event Strength over time
+The highest-rated events in the current V2 model:
+
+![Top 15 UFC Events](visuals/top_15_ufc_events_v2.png)
+
+The V2 model currently rates **UFC 269: Oliveira vs. Poirier** as the strongest event in the dataset.
+
+---
+
+### Ranking Depth vs. Event Strength
+
+V2 gives substantially more importance to the depth of ranked competition across an entire card.
+
+![Ranking Depth vs Event Strength](visuals/ranking_depth_vs_event_strength.png)
+
+This visualization shows the relationship between the new Ranking Depth Index and overall V2 Event Strength during the UFC rankings era.
+
+---
+
+### Published Model vs. V2
+
+The redesign changes how individual events are evaluated while preserving much of the overall structure of the original model.
+
+![Published vs V2 Rankings](visuals/published_vs_v2_rankings.png)
+
+---
+
+### Selected Event Rank Changes
+
+Several events illustrate the effect of the redesigned Card Quality methodology particularly well.
+
+![Selected Event Rank Movement](visuals/selected_event_rank_movement.png)
+
+Positive values indicate that an event ranks higher in V2, while negative values indicate that it ranks lower.
+
+For example:
+
+- **UFC 300** rises 7 positions.
+- **UFC 205** rises 5 positions.
+- **UFC 302** falls 16 positions.
+- **UFC 330** falls 10 positions.
+
+These changes are not manually imposed. They are outputs of the redesigned model.
+
+---
+
+### V2 Model Weights
+
+![V2 Model Weights](visuals/v2_model_weights.png)
+
+The final V2 candidate places the greatest emphasis on Card Quality while maintaining separate measures of star experience, main-event strength, and fanfare.
+
+---
+
+### Event Strength Over Time
+
+![UFC Event Strength by Year](visuals/event_strength_by_year_v2.png)
+
+Annual averages provide a broader view of how measured UFC card strength has changed across the history of the promotion.
 
 ---
 
