@@ -64,4 +64,14 @@ The following visualizations highlight the highest-rated UFC events across the E
 
 ---
 
-Created by **Adam Smith**.
+## Python Analysis
+
+[View the Python analysis notebook](notebooks/UFC_Event_Strength_Index_Analysis.ipynb)
+
+[View the complete dataset](data/ufc_event_strength_index_570_events_provisional.csv)
+
+[Read the scoring methodology](METHODOLOGY.md)
+
+---
+
+**Created by Adam Smith**
