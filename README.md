@@ -27,3 +27,40 @@ The project includes historical event comparisons, statistical analysis, data vi
 - Matplotlib
 - Data Analysis
 - Statistical Modeling
+---
+
+# UFC Event Rankings & Visualizations
+
+The following visualizations highlight the highest-rated UFC events across the Event Strength Index and its individual scoring categories.
+
+## Top 10 UFC Events of All Time
+
+![Top 10 UFC Events of All Time](visuals/top_10_ufc_events_all_time.png)
+
+## Top 10 UFC Events of 2026
+
+*Includes provisional 2026 event estimates.*
+
+![Top 10 UFC Events of 2026](visuals/top_10_ufc_events_2026.png)
+
+## Top 10 UFC Fight Nights of All Time
+
+*Excludes numbered UFC events.*
+
+![Top 10 UFC Fight Nights of All Time](visuals/top_10_ufc_fight_nights_all_time.png)
+
+## Top 10 Events — Card Quality
+
+![Top 10 UFC Card Quality](visuals/top_10_ufc_card_quality.png)
+
+## Top 10 Events — Main Event Strength
+
+![Top 10 UFC Main Event Strength](visuals/top_10_ufc_main_event_strength.png)
+
+## Top 10 Events — Star Experience
+
+![Top 10 UFC Star Experience](visuals/top_10_ufc_star_experience.png)
+
+---
+
+Created by **Adam Smith**.
