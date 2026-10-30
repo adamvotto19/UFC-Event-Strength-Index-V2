@@ -1,169 +1,229 @@
 # UFC Event Strength Index — Methodology
 
+**Author:** Adam Smith  
+**Project:** UFC Event Strength Index (ESI)  
+**Dataset:** 570 UFC events, including provisional UFC 333 estimates
+
 ## 1. Project Objective
 
-The UFC Event Strength Index evaluates the strength of UFC fight cards using historical event and fighter statistics.
+The UFC Event Strength Index is a Python-based sports analytics model designed to evaluate and rank UFC fight cards.
 
-The objective is to measure the overall quality and competitiveness of an event based on its entire fight card, while also accounting for experienced fighters, main event strength, and fan interest.
+The goal is to measure the overall strength of an event using fighter statistics, competitive depth, main event quality, and star experience.
 
-The current dataset covers **788 UFC events and 8,877 fights**, with event data through September 19, 2026.
+Unlike rankings based on personal opinions or fight entertainment, the ESI uses a consistent mathematical framework to compare events.
 
-## 2. Overall Event Strength Score
+## 2. Overall Event Strength Index
 
-Each event receives a score based on four components.
+Each event receives a score from 0 to 100 based on three components.
 
 | Component | Weight |
 |---|---:|
-| Card Quality | 46% |
-| Star Experience | 22% |
-| Main Event Strength | 22% |
-| Fanfare | 10% |
+| Card Quality | 70% |
+| Main Event Strength | 20% |
+| Star Experience | 10% |
 
-When all components are available, the overall score is calculated as:
+**Final formula:**
 
-**Event Strength = (0.46 × Card Quality) + (0.22 × Star Experience) + (0.22 × Main Event Strength) + (0.10 × Fanfare)**
+ESI = (0.70 × Card Quality) + (0.20 × Main Event Strength) + (0.10 × Star Experience)
 
-If a component is unavailable, its weight is redistributed proportionally among the available components.
+The model prioritizes the strength of the entire fight card while still recognizing the importance of the main event and experienced fighters.
 
 ## 3. Card Quality
 
-Card Quality measures the competitive strength of the full fight card.
+Card Quality evaluates the competitive strength and depth of the entire event.
 
-| Metric | Weight |
+The model incorporates:
+
+- Ranked fighters and ranked matchups
+- Ranking depth outside the main event
+- Fighter experience
+- UFC win percentages
+- Entering-event winning streaks
+- Finishing statistics
+- Title fights
+
+### Card Quality V3 Formula
+
+Card Quality V3 is calculated using:
+
+| Component | Weight |
 |---|---:|
-| Ranking Depth Index | 30% |
-| Title Fights | 14% |
-| Average UFC Experience | 14% |
-| Average UFC Win Percentage | 14% |
-| Average Win Streak | 14% |
-| Average Finish Rate | 14% |
+| Balanced Ranking Depth | 40% |
+| UFC Experience | 10% |
+| UFC Win Percentage | 7% |
+| Winning Streak | 4% |
+| Finish Rate | 4% |
+| Ranked Matchup Factor | 25% |
+| Title Depth Factor | 10% |
 
-The model combines these measurements into a Card Quality Score.
+Card Quality V3 =
 
-This approach rewards events with competitive depth across multiple fights, rather than focusing only on the main event.
+(0.40 × Balanced Ranking Depth)  
++ (0.10 × Experience)  
++ (0.07 × Win Percentage)  
++ (0.04 × Win Streak)  
++ (0.04 × Finish Rate)  
++ (0.25 × Ranked Matchup Factor)  
++ (0.10 × Title Depth Factor)
 
-## 4. Ranking Depth Index
+### Final Card Quality Adjustment
 
-Ranking Depth measures the overall strength of ranked competition across an event.
+The final Card Quality score incorporates an adjusted matchup-quality measurement.
 
-| Metric | Weight |
-|---|---:|
-| Total Ranking Points | 45% |
-| Ranked Fighter Breadth | 25% |
-| Ranked Matchups | 20% |
-| Title Fights | 10% |
+Final Card Quality = Card Quality V3 + 0.25 × (Matchup Quality Score − Ranked Matchup Factor)
 
-### Ranking Points
+This adjustment allows the model to distinguish between events with similar numbers of ranked matchups but different overall competitive profiles.
 
-Fighters receive ranking points based on their position entering the event.
+## 4. Ranking Depth
+
+Ranking Depth evaluates how much ranked talent appears throughout the event, especially outside the main event.
+
+Ranking points are assigned as follows:
 
 - Champion: 16 points
 - Ranked #1: 15 points
 - Ranked #2: 14 points
-- Continuing downward through ranked #15: 1 point
-- Unranked fighters: 0 ranking points when ranking data is available
+- Continuing downward to ranked #15: 1 point
+- Unranked: 0 points when ranking information is available
 
-The index also accounts for the number of ranked fighters, ranked-versus-ranked matchups, and title fights on the card.
+The model calculates ranking depth using both average depth and total ranking points.
 
-**Historical ranking availability:** Events without reliable ranking information are treated as missing ranking data, not as events with zero ranking depth.
+### Outside-Main-Event Depth
 
-## 5. Star Experience
+Outside-Main Depth Score = Outside-Main Weighted Ranking Points / [0.48 × (Total Fights − 1)]
 
-Star Experience evaluates fighters' established UFC résumés entering an event.
+### Balanced Depth Score
 
-It uses historical experience and achievement information available before the event.
+Balanced Depth Score = (Average Depth Percentile + Total Depth Percentile) / 2
 
-This component is intended to measure established UFC experience, rather than assuming that experience automatically equals popularity.
+These calculations reward events with strong ranked competition across multiple fights rather than relying entirely on the headline matchup.
 
-## 6. Main Event Strength
+## 5. Ranked Matchup Factor
 
-Main Event Strength measures the competitive and historical credentials of the event's headline fight.
+The Ranked Matchup Factor measures the percentage of fights featuring ranked-versus-ranked matchups.
 
-The main event is evaluated separately from the overall card to recognize the importance of the headline matchup without allowing it to determine the entire event's score.
+Ranked Matchup Factor = 100 × (Ranked Matchups / Total Fights)
 
-Only information available before the event is used.
+For example, an event with 5 ranked matchups across 14 fights receives a Ranked Matchup Factor of approximately 35.71.
 
-## 7. Fanfare
+The final model also uses a separate Matchup Quality Score to refine Card Quality.
 
-Fanfare measures available indicators of public interest and drawing power.
+## 6. Title Depth Factor
 
-Its existing data sources include:
+The Title Depth Factor accounts for title-fight strength alongside the overall depth of the event.
 
-- Commercial audience information, when available
-- Historical drawing-power information
-- Search-interest acceleration
+Title Depth Factor = Title Score × [0.50 + 0.50 × (Balanced Depth Score / 100)]
 
-Coverage varies significantly across historical events.
+This rewards championship events that also feature strong supporting cards.
 
-The current Fanfare component does not yet provide a complete measurement of the popularity of every fighter on a card.
+## 7. Main Event Strength
 
-Research into a more comprehensive whole-card Fanfare measure remains separate from the current scoring model.
+Main Event Strength evaluates the historical and competitive credentials of the event's headline matchup.
 
-## 8. Normalization
+Relevant inputs include:
 
-The model converts individual metrics into comparable scores before combining them.
+- Main event fighters' UFC experience
+- UFC win percentages
+- Winning streaks
+- Previous championship appearances
+- Previous main event appearances
+- Ranking strength
 
-Percentile-based normalization helps compare measurements that have different units or scales.
+Main Event Strength contributes 20% to the final Event Strength Index.
 
-For applicable metrics, genuine zero values are preserved as zero rather than being converted into nonzero percentile scores.
+## 8. Star Experience
 
-## 9. Missing Data
+Star Experience evaluates the established UFC experience and accomplishments of fighters appearing on the event.
 
-Missing information is not automatically treated as zero.
+Relevant inputs include:
 
-When an input is unavailable, the model uses available information and adjusts applicable weights.
+- UFC fight experience
+- Previous title fights
+- Previous main events
+- Historical fighter accomplishments
 
-This is especially important for historical rankings and fan-interest measures, where coverage differs across time periods.
+Star Experience contributes 10% to the final Event Strength Index.
 
-## 10. Preventing Future-Result Leakage
+This component represents established UFC credentials, not a direct measurement of popularity or commercial drawing power.
 
-Fighter statistics are based on information available before the relevant UFC event.
+## 9. Normalization and Historical Comparisons
 
-Examples include:
+The model converts different statistical measurements into comparable scores.
 
-- Prior UFC fights and experience
-- Prior UFC wins and losses
-- Entering-event win streaks
-- Prior finish statistics
-- Rankings available at the time
+Percentile-based normalization is used for ranking-depth calculations and other historical comparisons.
 
-Future results are not used to strengthen an earlier event's score.
+This allows statistics measured on different scales to contribute to a combined scoring system.
 
-## 11. Dataset Coverage
+Because some scores depend on the historical comparison dataset, adding new events may affect percentile-based values and rankings.
+
+## 10. Missing Data and Limitations
+
+Historical UFC data is not equally complete across all events.
+
+Important limitations include:
+
+- Incomplete historical fighter rankings
+- Differences in statistical availability across eras
+- Missing fighter-level historical records
+- Estimated values for certain recent events
+- Limited direct measurement of commercial popularity
+
+Missing data is not automatically assumed to represent zero performance.
+
+Estimated inputs should be identified separately from verified historical statistics.
+
+## 11. UFC 333 — Provisional Analysis
+
+UFC 333 is included as a provisional entry in the 570-event dataset.
+
+| Metric | Provisional Result |
+|---|---:|
+| Event Strength Index | 82.83 |
+| Overall Ranking | #44 of 570 |
+| Final Card Quality | 84.49 |
+| Main Event Strength | 72.21 |
+| Star Experience | 92.53 |
+
+Some UFC 333 fighter statistics, historical rankings, and scoring components remain estimated or require additional verification.
+
+These results should not be interpreted as fully verified historical measurements.
+
+## 12. Dataset Coverage
 
 | Measurement | Coverage |
 |---|---:|
-| UFC events | 788 |
-| Historical fights | 8,877 |
-| Earliest event | March 11, 1994 |
-| Latest event | September 19, 2026 |
-| Events with Ranking Depth data | 564 |
+| Events ranked | 570 |
+| Scoring scale | 0–100 |
+| Main components | 3 |
+| Historical baseline | 569 events |
+| Provisional UFC 333 entry | 1 |
 
-The dataset contains event-level scoring components, overall scores, rankings, and historical statistics.
+The complete event-level dataset is available here:
 
-## 12. Interpretation and Limitations
+[View the 570-event dataset](data/ufc_event_strength_index_570_events_provisional.csv)
 
-The Event Strength Index measures modeled event strength, not the entertainment value of the fights after they occur.
+## 13. Interpretation
 
-A high score indicates that an event had strong statistical characteristics according to the model.
+A higher ESI score indicates stronger statistical characteristics according to the model.
 
-Important limitations include incomplete historical ranking coverage, limited commercial audience information, and differences in available data across eras.
+The index is designed to measure the strength of an event's lineup, not the entertainment value of fights after they occur.
 
-The correlation between Ranking Depth and overall Event Strength is approximately **0.841** among events with ranking-depth information. Because Ranking Depth contributes directly to the overall score, this correlation is descriptive and should not be interpreted as independent validation.
+The results should be understood as model-based rankings rather than definitive judgments about the greatest UFC events.
 
-## 13. Future Research
+## 14. Future Improvements
 
-Potential areas for improvement include:
+Planned improvements include:
 
-- Expanding reliable historical ranking coverage
-- Developing more complete whole-card fan-interest measures
-- Testing model results against independent external indicators
-- Improving historical data completeness and documentation
+- Verifying additional historical fighter statistics
+- Expanding historical ranking coverage
+- Refining matchup-quality calculations
+- Developing stronger measures of fighter recognition and drawing power
+- Testing the model against independent measures of event quality
+- Automating event updates and visualizations
 
-Any future adjustments should be evaluated empirically rather than designed to force specific events into preferred ranking positions.
+The long-term goal is to create a transparent, reproducible UFC analytics system that can be updated as new events occur.
 
 ---
 
-**Author:** Adam Votto  
-**Project:** UFC Event Strength Index  
-**Data through:** September 19, 2026
+**Created by Adam Smith**  
+**UFC Event Strength Index — Sports Analytics Project**
