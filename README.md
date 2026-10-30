@@ -1,3 +1,4 @@
+![UFC Event Strength Index Banner](visuals/ufc_esi_banner.png)
 # UFC Event Strength Index
 
 **A data-driven sports analytics project evaluating and ranking UFC events using historical fighter statistics, competitive depth, main event quality, and star power.**
